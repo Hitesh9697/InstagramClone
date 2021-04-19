@@ -3,10 +3,13 @@ package com.example.instagramclone;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.instagramclone.databinding.ActivityLoginBinding;
@@ -15,6 +18,7 @@ import com.parse.ParseUser;
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +26,10 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        setTitle("Login");
 
+        progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog.setMessage("Logging in");
         binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -33,7 +40,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String username, String password) {
+        progressDialog.show();
         ParseUser.logInInBackground(username, password, (parseUser, e) -> {
+            progressDialog.dismiss();
             if (parseUser != null) {
                 showAlert("Successful Login", "Welcome back " + username + " !");
             } else {
@@ -62,4 +71,11 @@ public class LoginActivity extends AppCompatActivity {
         ok.show();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(LoginActivity.
+                INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        return true;
+    }
 }
