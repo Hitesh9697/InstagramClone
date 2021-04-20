@@ -1,14 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
+    android:columnCount="2"
+    android:rowCount="7"
+    tools:context=".ProfileFragment" >
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/textViewProfileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:labelFor="@id/editTextProfileName"
+        android:padding="10dp"
+        android:text="@string/profile_name"
+        android:textSize="18sp" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/editTextProfileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:layout_marginStart="20dp"
+        android:autofillHints="@string/profile_name"
+        android:ems="10"
+        android:inputType="text"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/textViewProfileBio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_rowSpan="2"
+        android:layout_column="0"
+        android:layout_columnSpan="1"
+        android:layout_gravity="fill_horizontal"
+        android:labelFor="@id/editTextProfileBio"
+        android:padding="10dp"
+        android:text="@string/profile_bio"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editTextProfileBio"
+        android:autofillHints="@string/profile_bio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_rowSpan="2"
+        android:layout_column="1"
+        android:layout_columnSpan="1"
+        android:layout_gravity="fill"
+        android:layout_marginStart="20dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/textViewProfileProfession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:labelFor="@id/editTextProfileProfession"
+        android:padding="10dp"
+        android:text="@string/profile_profession"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editTextProfileProfession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:layout_marginStart="20dp"
+        android:autofillHints="@string/profile_profession"
+        android:ems="10"
+        android:inputType="text"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/textViewProfileHobbies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:labelFor="@id/editTextProfileHobbies"
+        android:padding="10dp"
+        android:text="@string/profile_hobbies"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editTextProfileHobbies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:layout_marginStart="20dp"
+        android:autofillHints="@string/profile_hobbies"
+        android:ems="10"
+        android:inputType="text"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/textViewProfileFavoriteSports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:labelFor="@id/editTextProfileFavoriteSports"
+        android:padding="10dp"
+        android:text="@string/profile_favorite_sports"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editTextProfileFavoriteSports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:layout_marginStart="20dp"
+        android:autofillHints="@string/profile_favorite_sports"
+        android:ems="10"
+        android:inputType="text"
+        android:padding="10dp" />
+
+
+</GridLayout>

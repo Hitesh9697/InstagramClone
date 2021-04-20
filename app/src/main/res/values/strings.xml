@@ -15,4 +15,9 @@
     <string name="tab_share_pictures">Share photos</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile_name">Name :</string>
+    <string name="profile_bio">Bio :</string>
+    <string name="profile_profession">Profession :</string>
+    <string name="profile_hobbies">Hobbies :</string>
+    <string name="profile_favorite_sports">Favorite sports :</string>
 </resources>
