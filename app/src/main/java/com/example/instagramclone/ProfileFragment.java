@@ -5,15 +5,24 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.instagramclone.databinding.FragmentProfileBinding;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
+
 public class ProfileFragment extends Fragment {
+
+    private FragmentProfileBinding binding;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +68,68 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                    //do something
+                    try {
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                return true;
+            }
+        });
+
+
+
+        final ParseUser parseUser = ParseUser.getCurrentUser();
+
+        binding.editTextProfileName.setText(getProfileInfoFromServer(parseUser, "name"));
+        binding.editTextProfileBio.setText(getProfileInfoFromServer(parseUser, "bio"));
+        binding.editTextProfileProfession.setText(getProfileInfoFromServer(parseUser, "profession"));
+        binding.editTextProfileHobbies.setText(getProfileInfoFromServer(parseUser, "hobbies"));
+        binding.editTextProfileFavoriteSports.setText(getProfileInfoFromServer(parseUser, "favorite_text"));
+
+        binding.buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                parseUser.put("name", binding.editTextProfileName.getText().toString());
+                parseUser.put("bio", binding.editTextProfileBio.getText().toString());
+                parseUser.put("profession", binding.editTextProfileProfession.getText().toString());
+                parseUser.put("hobbies", binding.editTextProfileHobbies.getText().toString());
+                parseUser.put("favorite_text", binding.editTextProfileFavoriteSports.getText().toString());
+                parseUser.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e == null) {
+                            Toast.makeText(getContext(), "Successfully updated!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Update failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+            }
+        });
+
+        return view;
     }
+
+    private String getProfileInfoFromServer(ParseUser parseUser, String className ) {
+        if (parseUser.get(className).toString().equals(null)){
+            return "";
+        } else {
+            return parseUser.get(className).toString();
+        }
+    }
+
 }

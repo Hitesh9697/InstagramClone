@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:columnCount="2"
     android:rowCount="7"
-    tools:context=".ProfileFragment" >
+    tools:context=".ProfileFragment">
 
     <TextView
         android:id="@+id/textViewProfileName"
@@ -32,10 +32,6 @@
         android:id="@+id/textViewProfileBio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_row="1"
-        android:layout_rowSpan="2"
-        android:layout_column="0"
-        android:layout_columnSpan="1"
         android:layout_gravity="fill_horizontal"
         android:labelFor="@id/editTextProfileBio"
         android:padding="10dp"
@@ -44,15 +40,11 @@
 
     <EditText
         android:id="@+id/editTextProfileBio"
-        android:autofillHints="@string/profile_bio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_row="1"
-        android:layout_rowSpan="2"
-        android:layout_column="1"
-        android:layout_columnSpan="1"
         android:layout_gravity="fill"
         android:layout_marginStart="20dp"
+        android:autofillHints="@string/profile_bio"
         android:ems="10"
         android:inputType="textMultiLine"
         android:padding="10dp" />
@@ -119,6 +111,15 @@
         android:ems="10"
         android:inputType="text"
         android:padding="10dp" />
+
+    <Button
+        android:id="@+id/buttonUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnSpan="2"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="@string/button_update_profile" />
 
 
 </GridLayout>

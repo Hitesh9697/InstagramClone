@@ -20,4 +20,5 @@
     <string name="profile_profession">Profession :</string>
     <string name="profile_hobbies">Hobbies :</string>
     <string name="profile_favorite_sports">Favorite sports :</string>
+    <string name="button_update_profile">Update</string>
 </resources>
