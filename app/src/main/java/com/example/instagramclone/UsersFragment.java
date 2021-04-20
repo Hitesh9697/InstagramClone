@@ -7,13 +7,22 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UsersFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.instagramclone.databinding.FragmentUsersBinding;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class UsersFragment extends Fragment {
+
+    private FragmentUsersBinding binding;
+    private ArrayList arrayList;
+    private ArrayAdapter adapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +67,28 @@ public class UsersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_users, container, false);
+        binding = FragmentUsersBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+        arrayList = new ArrayList();
+        adapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, arrayList);
+
+        ParseQuery<ParseUser> parseQuery = ParseUser.getQuery();
+        parseQuery.whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername());
+        parseQuery.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if(e == null) {
+                    if(objects.size() > 0) {
+                        for(ParseUser user : objects) {
+                            arrayList.add(user.getUsername());
+                        }
+                        binding.textViewLoading.animate().alpha(0).setDuration(2000);
+                        binding.listViewUsers.setAdapter(adapter);
+                    }
+                }
+            }
+        });
+
+        return view;
     }
 }
