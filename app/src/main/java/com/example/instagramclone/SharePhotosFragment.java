@@ -23,9 +23,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.instagramclone.databinding.FragmentSharePhotosBinding;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +44,7 @@ import static com.parse.Parse.getApplicationContext;
 public class SharePhotosFragment extends Fragment {
 
     private FragmentSharePhotosBinding binding;
+    private Bitmap receivedImageBitMap;
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -100,7 +108,7 @@ public class SharePhotosFragment extends Fragment {
                                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                                 String filePath =cursor.getString(columnIndex);
                                 cursor.close();
-                                Bitmap receivedImageBitMap = BitmapFactory.decodeFile(filePath);
+                                receivedImageBitMap = BitmapFactory.decodeFile(filePath);
                                 binding.imageViewPlaceHolder.setImageBitmap(receivedImageBitMap);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -131,6 +139,39 @@ public class SharePhotosFragment extends Fragment {
             }
         });
 
+        binding.buttonShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(receivedImageBitMap != null && !binding.editTextDescription.getText().toString().equals("")) {
+
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    receivedImageBitMap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] bytes = byteArrayOutputStream.toByteArray();
+                    ParseFile parseFile = new ParseFile("image.png", bytes);
+                    ParseObject parseObject = new ParseObject("Photo");
+                    parseObject.put("picture", parseFile);
+                    parseObject.put("description", binding.editTextDescription.getText().toString());
+                    parseObject.put("username", ParseUser.getCurrentUser().getUsername());
+                    parseObject.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Toast.makeText(getContext(), "Uploading successful!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+                if(receivedImageBitMap == null) {
+                    Toast.makeText(getContext(), "Please select image to share", Toast.LENGTH_SHORT).show();
+                }
+                if (binding.editTextDescription.getText().toString().equals("")) {
+                    Toast.makeText(getContext(), "Please enter description", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         return  view;
     }

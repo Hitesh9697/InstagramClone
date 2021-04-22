@@ -22,7 +22,7 @@
         android:src="@drawable/placeholder" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/editTextDescription"
         android:autofillHints="@string/description"
         android:hint="@string/description"
         android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="350dp"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="text" />
 
     <Button
         android:id="@+id/buttonShare"

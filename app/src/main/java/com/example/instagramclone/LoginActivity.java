@@ -44,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         ParseUser.logInInBackground(username, password, (parseUser, e) -> {
             progressDialog.dismiss();
             if (parseUser != null) {
+                binding.editTextLoginUsername.setText("");
+                binding.editTextLoginPassword.setText("");
                 showAlert("Successful Login", "Welcome back " + username + " !");
             } else {
                 ParseUser.logOut();

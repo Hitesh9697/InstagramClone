@@ -23,4 +23,6 @@
     <string name="placeholder_image">Placeholder Image</string>
     <string name="share">Share</string>
     <string name="description">Description</string>
+    <string name="post_image">Post Image</string>
+    <string name="logout">Logout</string>
 </resources>
