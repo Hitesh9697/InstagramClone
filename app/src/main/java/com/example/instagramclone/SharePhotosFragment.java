@@ -1,22 +1,44 @@
 package com.example.instagramclone;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SharePhotosFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.instagramclone.databinding.FragmentSharePhotosBinding;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+
+import static android.content.ContentValues.TAG;
+import static com.parse.Parse.getApplicationContext;
+
 public class SharePhotosFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private FragmentSharePhotosBinding binding;
+
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -58,7 +80,84 @@ public class SharePhotosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_share_photos, container, false);
+        binding = FragmentSharePhotosBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+
+        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            // There are no request codes
+                            Intent data = result.getData();
+                            //doSomeOperations();
+                            try {
+                                Uri selectedImage = data.getData();
+                                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                                Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                                cursor.moveToFirst();
+                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                String filePath =cursor.getString(columnIndex);
+                                cursor.close();
+                                Bitmap receivedImageBitMap = BitmapFactory.decodeFile(filePath);
+                                binding.imageViewPlaceHolder.setImageBitmap(receivedImageBitMap);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+        binding.imageViewPlaceHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(
+                        getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    // You can use the API that requires the permission.
+                    //performAction(...);
+
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    someActivityResultLauncher.launch(intent);
+
+                } else {
+                    // You can directly ask for the permission.
+                    // The registered ActivityResultCallback gets the result of this request.
+                    String[] permission = new String[] {Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                    //mPermissionResult.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+                    permissionResult.launch(permission);
+                }
+            }
+        });
+
+
+        return  view;
     }
+
+    private ActivityResultLauncher<String> mPermissionResult = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            new ActivityResultCallback<Boolean>() {
+                @Override
+                public void onActivityResult(Boolean result) {
+                    if(result) {
+                        Log.e(TAG, "onActivityResult: PERMISSION GRANTED");
+                    } else {
+                        Log.e(TAG, "onActivityResult: PERMISSION DENIED");
+                    }
+                }
+            });
+    private ActivityResultLauncher<String[]> permissionResult = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+        @Override
+        public void onActivityResult(Map<String, Boolean> result) {
+            for (Map.Entry entry : result.entrySet()) {
+                Log.e("error", "${it.key} = ${it.value}");
+            }
+        }
+    });
+
+   /* @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }*/
 }
