@@ -1,5 +1,6 @@
 package com.example.instagramclone;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.example.instagramclone.databinding.FragmentUsersBinding;
@@ -86,6 +88,16 @@ public class UsersFragment extends Fragment {
                         binding.listViewUsers.setAdapter(adapter);
                     }
                 }
+            }
+        });
+
+
+        binding.listViewUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent (getContext(), UserItemActivity.class);
+                intent.putExtra("username", arrayList.get(position).toString());
+                startActivity(intent);
             }
         });
 

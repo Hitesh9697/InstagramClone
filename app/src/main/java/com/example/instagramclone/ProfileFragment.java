@@ -125,7 +125,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private String getProfileInfoFromServer(ParseUser parseUser, String className ) {
-        if (parseUser.get(className).toString().equals(null)){
+        if (parseUser.get(className) == null){
             return "";
         } else {
             return parseUser.get(className).toString();
